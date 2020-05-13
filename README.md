@@ -1,3 +1,3 @@
-# ble_flutter_demo
+# BLE Flutter Demo
 
 Basic Bluetooth Low Energy implementation
