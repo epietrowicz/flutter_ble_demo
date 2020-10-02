@@ -27,8 +27,10 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final FlutterBlue flutterBlue = FlutterBlue.instance;
   BluetoothCharacteristic _ledChar;
-  var _myService = "bb89ad38-c3a8-4e49-8c9f-b15573ee9a70";
-  var _myChar = "a404a877-90d8-44ae-af73-92a17ede3d11";
+  //var _myService = "bb89ad38-c3a8-4e49-8c9f-b15573ee9a70";
+  var _myService = "1d88ef03-2083-4603-86bf-7965794b1ea0";
+  //var _myChar = "a404a877-90d8-44ae-af73-92a17ede3d11";
+  var _myChar = "02e05359-0f7f-4020-bf3a-a7cd1a3b05ab";
 
   bool _getLEDChar(List<BluetoothService> services) {
     for (BluetoothService s in services) {
@@ -37,6 +39,7 @@ class _MyHomePageState extends State<MyHomePage> {
         for (BluetoothCharacteristic c in characteristics) {
           if (c.uuid.toString() == _myChar) {
             _ledChar = c;
+            print("found service / characteristic !! ----------------------");
             return true;
           }
         }
@@ -62,7 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void _scanForDevice() {
     flutterBlue.scanResults.listen((List<ScanResult> results) {
       for (ScanResult result in results) {
-        if (result.device.name == "customGlow") {
+        if (result.device.name == "barbud") {
           _connectDevice(result.device);
         }
       }
@@ -82,8 +85,11 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             FloatingActionButton(
-              onPressed: () {
-                _ledChar.write([0xff, 0xff, 0xff, 0x10]);
+              onPressed: () async {
+                await _ledChar.setNotifyValue(true);
+                _ledChar.value.listen((value) {
+                  print("DOUBLE CLICK DETECTED !!!!!!!! -------------------");
+                });
               },
               tooltip: 'Increment',
               child: Icon(Icons.add_circle),
